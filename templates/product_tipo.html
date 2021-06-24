@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block seccion %}{{ categoria }}{% endblock %}
+{% block clases-body %}class="main-layout"{% endblock %}
+{% block contenido %}
+    <div class="contactus" xmlns="">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="title">
+                        <h2>{{ categoria }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ourproduct">
+        <div class="container">
+            <div class="row product_style_3" id="abdel">
+                {% for item in productos %}
+                    <!-- product -->
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div class="full product">
+                                <div class="product_img">
+                                    <div class="center"> <img src="/media/{{ item.image }}" alt="#"/>
+                                        <div onclick="add({{ item.id }})"  style="cursor: pointer" class="overlay_hover"> <a class="add-bt">+ Añadir al carrito</a> </div>
+                                    </div>
+                                </div>
+                            <a href="{% url 'producto_detail' item.id %}">
+                                <div class="product_detail text_align_center">
+                                    {% if item.price and item.price > 0 %}
+                                        <p class="product_price">${{ item.price }} {{ cfg.moneda }} {% comment %}<span class="old_price">$679.89</span>{% endcomment %}</p>
+                                    {% endif %}
+                                    <p class="product_descr">{{ item.name }}</p>
+
+                                </div>
+                            </a>
+                            </div>
+                        </div>
+                    <!-- end product -->
+                    {% empty %}
+                    <h1 class="mr-1 ml-1">No se encontraron productos</h1>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra-scripts %}
+    <script>
+        function showMessage(s) {
+            var m = $("#message");
+            m.html(s);
+            m.addClass("notificacion");
+            m.removeClass("is-removed");
+            m.removeClass("is-hidden");
+            m.addClass("is-visible");
+            setTimeout(function() {
+            m.removeClass("is-visible");
+            m.addClass("is-hidden");
+            setTimeout(function() {
+                m.addClass("is-removed");
+            }, 500);
+            }, 1000);
+        }
+            function add(id) {
+                block_screen();
+                $.ajax({
+                  url: '/cart/add/' + id + '/',
+                  data: id,
+                  success: function (response) {
+                    setTimeout(function() {
+                        unblock_screen()
+                    }, 1000);
+                    showMessage("Se agregó ".concat(response['name']).concat(" a la cuenta"));
+                    var total_cart = document.getElementById('total_ajax'.concat(''));
+                    total_cart.innerText = parseFloat(total_cart.innerText) + parseFloat(response['price']);
+                  },
+                });
+            }
+    </script>
+{% endblock %}
+

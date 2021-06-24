@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block seccion %}Contacto{% endblock %}
+{% block clases-body %}class="main-layout contact_page"{% endblock %}
+{% block contenido %}
+    <div class="contactus">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="title">
+                        <h2>Contáctenos</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- map -->
+    <div class="contact">
+        <div class="container-fluid padddd">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 padddd">
+                    <div class="map_section">
+                        <div style="width: 100%">{{ coordenadas|safe }}</div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 padddd">
+                    <form class="main_form" method="post" action="{% url 'contacto' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.nombre class+="form-control" placeholder="Nombre" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.telefono class+="form-control" placeholder="Teléfono o Email" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.asunto class+="form-control" placeholder="Asunto" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.mensaje class+="form-control" placeholder="Mensaje" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <button class="send">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block seccion %}Inicio{% endblock %}
+{% block clases-body %}class="main-layout"{% endblock %}
+{% block extra-style %}
+    <style>
+        .tipos::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        .tipos::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+
+        .tipos::-webkit-scrollbar-thumb {
+          background: #888;
+        }
+
+        .tipos::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+    .banner_main .text-bg a {
+        width: 191px;
+        background: #fff;
+        padding: 9px 0px;
+        color: #000;
+        font-size: 17px;
+        display: inline-block;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        margin-left: 130px;
+        text-transform: uppercase;
+        font-weight: 500;
+        box-shadow: #000 -7px 7px 0px -1px;
+    }
+    @media (max-width: 575px){
+        .mapimg {
+            margin-bottom: 0;
+        }
+        .banner_main .text-bg a {
+            margin-left: 90px;
+        }
+    }
+    </style>
+{% endblock %}
+{% block contenido %}
+    <section class="slider_section">
+                <div class="banner_main">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mapimg">
+                                <div class="text-bg">
+                                    <h1>{{ principal.titulo }} <br> <strong class="black_bold">{{ principal.subtitulo }}</strong><br></h1>
+                                    <a href="{% url principal.enlace %}">{{ principal.get_enlace_display }} <i class='fa fa-angle-right'></i></a>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="text-img">
+                                    <figure><img src="/media/{{ principal.imagen }}" /></figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- discount -->
+            <div class="container">
+                <div id="myCarousel" class="carousel slide banner_Client" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% for item in servicios %}
+                            {% if forloop.first %}
+                                <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}" class="active"></li>
+                            {% else %}
+                                <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}"></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for item in servicios %}
+                            {% if forloop.first %}
+
+                                <div class="carousel-item active">
+                                    <div class="container">
+                                        <div class="carousel-caption text">
+                                            <div class="row">
+                                                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                                                    <div class="img_bg">
+                                                        <h3><a style="color: white" href="{% url 'servicio_detail' item.id %}">{{ item.name }}</a><br> <strong class="black_nolmal">{{ item.resumen|safe }}</strong></h3>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="img_bg">
+                                                        <figure style="width: 350px" ><a href="{% url 'servicio_detail' item.id %}"><img style="width: 350px; height: 350px" src="/media/{{ item.image }}" /></a></figure>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="carousel-item">
+                                    <div class="container">
+                                        <div class="carousel-caption text">
+                                            <div class="row">
+                                                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                                                    <div class="img_bg">
+                                                        <h3><a style="color: white" href="{% url 'servicio_detail' item.id %}">{{ item.name }}</a><br> <strong class="black_nolmal">{{ item.resumen|safe }}</strong></h3>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="img_bg">
+                                                        <figure style="width: 350px" ><a href="{% url 'servicio_detail' item.id %}"><img style="width: 350px; height: 350px" src="/media/{{ item.image }}" /></a></figure>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- end discount -->
+            <!-- trending -->
+            <div class="trending">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                            <div class="title">
+                                <h2>Mobiliaria <strong class="black">D' Franco</strong></h2>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% for item in tipos %}
+                            <a href="{% url 'productos_tipo' item.id %}">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 {% cycle 'margitop' '' %}">
+                                <div class="trending-box">
+                                    <figure><img src="/media/{{ item.imagen }}" /></figure>
+                                    <h3>{{ item.tipo }}</h3>
+
+                                </div>
+                            </a>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+                            <div class="banner_main">
+                                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mapimg"></div>
+                                    <div class="col-xl-1 col-lg-6 col-md-6 col-sm-12 mapimg">
+                                        <div class="text-bg">
+                                            <a href="{% url 'categorias' %}">Ver todos <i class='fa fa-angle-right'></i></a>
+                                        </div>
+                                    </div>
+
+                            </div>
+
+            <!-- end trending -->
+
+            <!-- our brand -->
+            <div class="brand">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="title">
+                                <h2>Artículos <strong class="black">Populares</strong></h2>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="brand-bg">
+                    <div class="row">
+                        {% for item in productos %}
+
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
+                                <div class="brand-box">
+                                <a href="{% url 'producto_detail' item.id %}">
+                                    <i><img src="/media/{{ item.image }}"/></i>
+                                    <h3>{{ item.name }}</h3>
+                                    {% if item.price and item.price > 0 %}
+                                        <span>{{ item.price }} {{ cfg.moneda }}</span>
+                                    {% endif %}
+                                </a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                        <div class="banner_main">
+                                <div class="row">
+                                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mapimg"></div>
+                                    <div class="col-xl-1 col-lg-6 col-md-6 col-sm-12 mapimg">
+                                        <div class="text-bg">
+                                            <a href="{% url 'productos' %}">Ver todos <i class='fa fa-angle-right'></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                </div>
+            </div>
+            <!-- end our brand -->
+            <!-- map -->
+            <div class="contact">
+                <div class="container-fluid padddd">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                            <div class="title">
+                                <h2>Contác<strong class="black">tenos</strong></h2>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 padddd">
+                             <div class="map_section">
+                     {{ coordenadas|safe }}
+                   </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 padddd">
+                            <form class="main_form" method="post" action="{% url 'contacto' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.nombre class+="form-control" placeholder="Nombre" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.telefono class+="form-control" placeholder="Teléfono o Email" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.asunto class+="form-control" placeholder="Asunto" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                {% render_field form.mensaje class+="form-control" placeholder="Mensaje" %}
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <button class="send">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end map -->
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block seccion %}Historias{% endblock %}
+{% block clases-body %}class="main-layout"{% endblock %}
+{% block contenido %}
+    <div class="contactus">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="title">
+                        <h2>{{ historia.titulo }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="blog">
+        <div class="container">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 margin">
+                <div class="news-box">
+                    <figure><a> <img src="/media/{{ historia.imagen }}" alt="img"/></a></figure>
+                </div>
+                <span style="font-weight: bolder">{{ historia.fecha }}</span>
+                <hr>
+            </div>
+        {% if historia.contenido %}
+            <div class="row ml-1 mr-1">
+                {{ historia.contenido|safe }}
+
+            </div>
+            <hr>
+        {% endif %}
+        <button style="background-color: #4b4a45; color: white" id="boton-video" class="btn center">Mostrar videos</button> <br><br>
+            <div style="display: none" class="row" id="abdel">
+
+                {% for item in historia.galeria.all %}
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 margin">
+                        <div class="news-box">
+                            <iframe width="100%" height="600px" src="{{ item.multimedia }}"></iframe>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <h1 style="padding: 10px; text-align: center"> Esta historia no contiene videos.</h1>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra-scripts %}
+    <script>
+        $("#boton-video").click(function () {
+            if ($("#boton-video").html() === "Mostrar videos"){
+                $("#boton-video").html("Ocultar videos")
+
+            } else {
+                $("#boton-video").html("Mostrar videos")
+                $('body video, body audio').each(function(){
+                    $(this).prop('muted', true);
+                });
+            }
+            $("#abdel").toggle("slow")
+
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,302 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>{{ cfg.nombre }} | {% block seccion %}{% endblock %}</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="{% static 'principal/css/bootstrap.min.css' %}">
+    <!-- style css -->
+    <link rel="stylesheet" href="{% static 'principal/css/style.css' %}">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="{% static 'principal/css/responsive.css' %}">
+    <!-- fevicon -->
+    <link rel="icon" href="/media/{{ cfg.logo }}" type="image/gif" />
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="{% static 'principal/css/jquery.mCustomScrollbar.min.css' %}">
+    <!-- Tweaks for older IEs-->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <link rel="stylesheet" href="{% static 'principal/css/custom.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'principal/css/css tabla/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+
+    {% block extra-style %}{% endblock %}
+    <style>
+        .banner_main .text-bg h1 {
+            color: {{ cfg.color }};
+        }
+        #sidebar ul li.active > a, a[aria-expanded="true"] {
+            background: {{ cfg.color }};
+        }
+        .text {
+            background: {{ cfg.color }};
+        }
+        .carousel-indicators .active {
+            background-color: {{ cfg.color }};
+        }
+        .title h2{
+            color: {{ cfg.color }};
+        }
+        .carousel-indicators .active {
+            background-color: {{ cfg.color }};
+        }
+        .send:hover {
+            background: {{ cfg.color2 }};
+        }
+        .brand .title h2 {
+            color: {{ cfg.color }};
+        }
+        .banner_main .text-bg a:hover {
+            background: {{ cfg.color2 }};
+        }
+        .contactus {
+            background-color: {{ cfg.color }};
+        }
+        .footer {
+            background: {{ cfg.color }};
+        }
+        .copyright {
+            background-color: #000000;
+        }
+        .product_price {
+            color: {{ cfg.color }};
+        }
+        .blog .news-box span {
+            color: {{ cfg.color }};
+        }
+        .minus:hover {
+            background-color: {{ cfg.color }} !important;
+        }
+        .plus:hover {
+            background-color: {{ cfg.color }} !important;
+        }
+        .bt_main:hover, .bt_main:focus {
+            background: {{ cfg.color2 }};
+        }
+        .tab_bar_section ul.nav.nav-tabs li a.active {
+            background-color: {{ cfg.color2 }};
+        }
+        .btn-primary:hover {
+            background-color: {{ cfg.color2 }};
+            border-color: {{ cfg.color2 }};
+        }
+        .btn-primary{
+            background-color: {{ cfg.color2 }};
+            border-color: {{ cfg.color2 }};
+        }
+        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+            background-color: {{ cfg.color2 }};
+            border-color: {{ cfg.color2 }};
+        }
+        .btn-primary.focus, .btn-primary:focus {
+            box-shadow: 0 0 0 .2rem {{ cfg.color2 }};
+        }
+    </style>
+</head>
+<body {% block clases-body %}{% endblock %}>
+        <div id="message" class="is-hidden"></div>
+        <div class="loader_bg">
+            <div class="loader"><img src="{% static 'principal/images/loading.gif' %}" alt="#" /></div>
+        </div>
+
+        <div class="wrapper">
+            <div class="sidebar">
+                <!-- Sidebar  -->
+                <nav id="sidebar" style="z-index: 2000">
+                    <div style="" class="row" id="fila-click">
+                        <div style="" id="dismiss">
+                            <i class="fa fa-arrow-left"></i>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled components">
+                        <li class="active"> <a href="{% url 'index' %}">Inicio</a></li>
+                        <li> <a href="{% url 'nosotros' %}">Nosotros</a></li>
+                        <li> <a href="{% url 'productos' %}">Productos</a></li>
+                        <li> <a href="{% url 'categorias' %}">Tipos de producto</a></li>
+                        <li> <a href="{% url 'servicios' %}">Servicios</a></li>
+                        <li> <a href="{% url 'blog' %}">Historias</a></li>
+                        <li> <a href="{% url 'contacto' %}">Contacto</a></li>
+                        <li> <a href="{% url 'cart_detail' %}">Ver carrito</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div id="content">
+                <!-- header -->
+                <header>
+                    <!-- header inner -->
+                    <div class="header">
+
+                        <div class="container-fluid">
+
+                            <div class="row">
+                                <div class="col-lg-3 logo_section">
+                                    <div class="full">
+                                        <div class="center-desk">
+                                            <div class="logo">
+                                                <a href="{% url 'index' %}"><img src="/media/{{ cfg.logo }}" alt="#"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="right_header_info">
+                                        <ul>
+                                            <li>
+                                                <a href="{% url 'cart_detail' %}"><img style="margin-right: 15px;" src="{% static 'principal/icon/3.png' %}" alt="#" /></a>
+                                                <span id="carrito_amount"><span id="total_ajax">{{ total }}</span> {{ cfg.moneda }}</span>
+                                            </li>
+
+                                            <li>
+                                                <button type="button" id="sidebarCollapse">
+                                                    <img src="{% static 'principal/images/menu_icon.png' %}" alt="#" />
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end header inner -->
+                </header>
+                {% block contenido %}{% endblock %}
+                <footer>
+                    <div class="footer">
+                        <div class="container-fluid">
+                            <div class="border1">
+                                <div class="row">
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                        <img alt="#" class="logo1" src="/media/{{ cfg.logo }}" />
+                                    </div>
+
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                        <ul class="lik">
+                                            <li> <a href="{% url 'index' %}">Inicio</a></li>
+                                            <li> <a href="{% url 'nosotros' %}">Nosotros</a></li>
+                                            <li> <a href="{% url 'productos' %}">Productos</a></li>
+                                            <li> <a href="{% url 'servicios' %}">Servicios</a></li>
+                                            <li> <a href="{% url 'blog' %}">Historias</a></li>
+                                            <li> <a href="{% url 'contacto' %}">Contacto</a></li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                        <ul class="sociel">
+                                            {% if cfg.facebook %}
+                                                <li> <a style="color: white !important" href="//{{ cfg.facebook }}"><i class="fa fa-facebook-f"></i></a></li>
+                                            {% endif %}
+                                            {% if cfg.instagram %}
+                                                <li> <a style="color: white !important" href="//{{ cfg.instagram }}"><i class="fa fa-instagram"></i></a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="newtt">
+                                        {{ cfg.descripcion|safe }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="copyright">
+                            <p>Copyright 2021 {{ cfg.nombre }} Todos los derechos reservados | Diseño por <a style="color: white !important" href="https://html.design/">GoDjango Templates</a> | Desarrollado por GoDjango</p>
+                        </div>
+                 </div>
+                </footer>
+            <!-- end footer -->
+        </div>
+    </div>
+    <div class="overlay"></div>
+        <!-- Javascript files-->
+        <script src="{% static 'principal/js/jquery.min.js' %}"></script>
+        <script src="{% static 'principal/js/popper.min.js' %}"></script>
+        <script src="{% static 'principal/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'principal/js/jquery-3.0.0.min.js' %}"></script>
+        <!-- sidebar -->
+        <script src="{% static 'principal/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+        <script src="{% static 'principal/js/custom.js' %}"></script>
+        <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#sidebar").mCustomScrollbar({
+                    theme: "minimal"
+                });
+                $('#fila-click').on('click', function() {
+                    $('#sidebar').removeClass('active');
+                    $('.overlay').removeClass('active');
+                });
+                $('#dismiss, .overlay').on('click', function() {
+                    $('#sidebar').removeClass('active');
+                    $('.overlay').removeClass('active');
+                });
+                $('#sidebarCollapse').on('click', function() {
+                    $('#sidebar').addClass('active');
+                    $('.overlay').addClass('active');
+                    $('.collapse.in').toggleClass('in');
+                    $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+                });
+            });
+            function unblock_screen() {
+              $('#screenBlock').animate({opacity: 0}, 200, function() {
+                  $('#screenBlock').remove();
+              });
+            }
+            function block_screen() {
+                $('<div id="screenBlock"></div>').appendTo('body');
+                $('#screenBlock').css( { opacity: 0, width: $(document).width(), height: $(document).height() } );
+                $('#screenBlock').addClass('blockDiv');
+                $('#screenBlock').animate({opacity: 0.7}, 200);
+            }
+        </script>
+        <script>
+          // This example adds a marker to indicate the position of Bondi Beach in Sydney,
+          // Australia.
+          function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 11,
+              center: {lat: 40.645037, lng: -73.880224},
+              });
+
+          var image = 'images/maps-and-flags.png';
+          var beachMarker = new google.maps.Marker({
+              position: {lat: 40.645037, lng: -73.880224},
+              map: map,
+              icon: image
+            });
+          }
+        function unblock_screen() {
+            $('#screenBlock').animate({opacity: 0}, 200, function () {
+                $('#screenBlock').remove();
+            });
+        }
+
+        function block_screen() {
+            $('<div id="screenBlock"></div>').appendTo('body');
+            $('#screenBlock').css({opacity: 0, width: $(document).width(), height: $(document).height()});
+            $('#screenBlock').addClass('blockDiv');
+            $('#screenBlock').animate({opacity: 0.7}, 200);
+        }
+        </script>
+
+        {% block extra-scripts %}{% endblock %}
+    </body>
+</html>

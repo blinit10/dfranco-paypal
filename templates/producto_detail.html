@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block seccion %}{{ producto.name }}{% endblock %}
+{% block extra-style %}
+    <style>
+        {% for item in producto.galeriaproducto_set.all %}
+            #myImg{{ forloop.counter }} {
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            #myImg{{ forloop.counter }}:hover {opacity: 0.7;}
+        {% endfor %}
+        /* Caption of Modal Image (Image Text) - Same Width as the Image */
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+        #message{
+            z-index: 1600;
+        }
+    </style>
+{% endblock %}
+{% block clases-body %}class="main-layout"{% endblock %}
+{% block contenido %}
+    <div style="z-index: 1500" id="myModal" class="modal">
+
+          <!-- The Close Button -->
+          <span class="close">&times;</span>
+
+          <!-- Modal Content (The Image) -->
+          <img  class="modal-content" id="img01">
+
+          <!-- Modal Caption (Image Text) -->
+          <div id="caption"></div>
+        </div>
+    <div class="layout_padding-2">
+        <div class="container">
+            <div class="row">
+                <div  class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    <div id="link0" class="img_box">
+                        <figure><img id="myImg0" src="/media/{{ producto.image }}" alt="{{ producto.contenido|safe }}"/></figure>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 product_detail_side">
+                    <div class="abotext_box">
+                        <div class="product-heading">
+                            <h2>{{ producto.name }}</h2>
+                        </div>
+                        <div class="product-detail-side">
+                            <span class="new-price">{{ producto.price }} {{ cfg.moneda }}</span>
+                            <span class="rating">
+                                {% if mas_comprado == True %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                {% endif %}
+                                {% if mas_visitado == True %}
+                                    <i class="fa fa-star-o" aria-hidden="true"></i>
+                                {% endif %}
+                            </span>
+                            {% if producto.compras >= 10 and mas_comprado == True %}
+                                <span class="review">(Más comprado - {{ producto.compras }} compras)</span>
+                            {% endif %}
+                        </div>
+                        <div class="detail-contant">
+                            <ul>
+                            {% for item in  producto.productoperks_set.all %}
+                                <li>• {{ item }}</li>
+                            {% endfor %}
+                            </ul>
+
+                            <br><br>
+                                <button onclick="add({{ producto.id }})" class="bt_main">Añadir al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="full">
+                        <div class="tab_bar_section">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#description">Descripción</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#reviews">Otras imágenes ({{ producto.galeriaproducto_set.all|length }})</a></li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div id="description" class="tab-pane active">
+                                    <div class="product_desc">
+                                        {{ producto.contenido|safe }}
+                                    </div>
+                                </div>
+                                <div id="reviews" class="tab-pane fade">
+                                    <div class="product_review">
+                                        {% if producto.galeriaproducto_set.all|length > 1 %}
+                                            <h3>Se encontraron {{ producto.galeriaproducto_set.all|length }} imágenes </h3>
+                                        {% elif producto.galeriaproducto_set.all|length == 0 %}
+                                            <h3>No se encontraron imágenes </h3>
+                                        {% elif producto.galeriaproducto_set.all|length == 1 %}
+                                            <h3>Se encontró {{ producto.galeriaproducto_set.all|length }} imagen </h3>
+                                        {% endif %}
+
+                                        {% for item in producto.galeriaproducto_set.all %}
+                                            <div id="link{{ forloop.counter }}" class="commant-text row">
+                                                <div class="col-lg-2 col-md-2 col-sm-4">
+                                                    <div class="profile">
+                                                        <img id="myImg{{ forloop.counter }}" class="img-responsive" src="/media/{{ item.image }}" alt="{{ item.contenido|safe }}">
+                                                    </div>
+                                                </div>
+                                                {% if item.titulo or item.contenido %}
+                                                    <div class="col-lg-10 col-md-10 col-sm-8">
+                                                        <br>
+                                                        <h5>{{ item.titulo }}</h5>
+                                                        {{ item.contenido|safe }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra-scripts %}
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        var texto0 = document.getElementById("link0");
+            var img0 = document.getElementById("myImg0");
+            texto0.onclick = function(){
+              modal.style.display = "block";
+              modalImg.src = img0.src;
+              captionText.innerHTML = img0.alt;
+            }
+        {% for item in producto.galeriaproducto_set.all %}
+
+            // Get the image and insert it inside the modal - use its "alt" text as a caption
+            var texto{{ forloop.counter }} = document.getElementById("link{{ forloop.counter }}");
+            var img{{ forloop.counter }} = document.getElementById("myImg{{ forloop.counter }}");
+            texto{{ forloop.counter }}.onclick = function(){
+              modal.style.display = "block";
+              modalImg.src = img{{ forloop.counter }}.src;
+              captionText.innerHTML = img{{ forloop.counter }}.alt;
+            }
+
+
+        {% endfor %}
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        function showMessage(s) {
+            var m = $("#message");
+            m.html(s);
+            m.addClass("notificacion");
+            m.removeClass("is-removed");
+            m.removeClass("is-hidden");
+            m.addClass("is-visible");
+            setTimeout(function () {
+                m.removeClass("is-visible");
+                m.addClass("is-hidden");
+                setTimeout(function () {
+                    m.addClass("is-removed");
+                }, 500);
+            }, 1000);
+        }
+
+        function add(id) {
+            block_screen();
+            $.ajax({
+                url: '/cart/add/' + id + '/',
+                data: id,
+                success: function (response) {
+                    setTimeout(function () {
+                        unblock_screen()
+                    }, 1000);
+                    showMessage("Se agregó ".concat(response['name']).concat(" a la cuenta"));
+                    var total_cart = document.getElementById('total_ajax'.concat(''));
+                    total_cart.innerText = parseFloat(total_cart.innerText) + parseFloat(response['price']);
+                },
+            });
+        }
+    </script>
+{% endblock %}

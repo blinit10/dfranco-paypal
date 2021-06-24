@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block seccion %} Nosotros{% endblock %}
+{% block extra-style %}
+    <style>
+        {% for item in seccion.bloques.all %}
+            #div{{ forloop.counter }} p{
+                text-align: {{ item.alineacion }}!important;
+            }
+            #div{{ forloop.counter }} h3{
+                text-align: {{ item.alineacion }}!important;
+            }
+        {% endfor %}
+    </style>
+{% endblock %}
+{% block clases-body %}class="main-layout"{% endblock %}
+{% block contenido %}
+    <div class="contactus">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="title">
+                        <h2>{{ seccion.titulo }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="about">
+        <div class="container">
+            <div class="row">
+                {% for item in seccion.bloques.all %}
+                    {% if item.bloque_der == False %}
+                        {% if item.titulo or item.contenido %}
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="aboutimg" id="div{{ forloop.counter }}">
+                                    {% if item.titulo %}
+                                        <h3>{{ item.titulo }}</h3>
+                                    {% endif %}
+                                    {% if item.contenido %}
+                                        {{ item.contenido|safe }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if item.imagen %}
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" style="margin-bottom: 10px; margin-top: 10px">
+                                <div class="aboutimg">
+                                    <figure><img style="max-width: 100%; max-height: 500px" src="/media/{{ item.imagen }}"/></figure>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        {% if item.imagen %}
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" style="margin-bottom: 10px; margin-top: 10px">
+                                <div class="aboutimg">
+                                    <figure><img style="max-width: 100%; max-height: 500px" src="/media/{{ item.imagen }}"/></figure>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if item.titulo or item.contenido %}
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="aboutimg" id="div{{ forloop.counter }}">
+                                    {% if item.titulo %}
+                                        <h3>{{ item.titulo }}</h3>
+                                    {% endif %}
+                                    {% if item.contenido %}
+                                        {{ item.contenido|safe }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

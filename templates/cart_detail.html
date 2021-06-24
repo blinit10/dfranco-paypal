@@ -1,0 +1,453 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block seccion %}{{ producto.name }}{% endblock %}
+{% block extra-style %}
+    <style>
+        a {
+            color: black !important;
+        }
+
+        {% for item in producto.galeriaproducto_set.all %}
+            #myImg{{ forloop.counter }} {
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            #myImg{{ forloop.counter }}:hover {
+                opacity: 0.7;
+            }
+        {% endfor %}
+
+        /* Caption of Modal Image (Image Text) - Same Width as the Image */
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'principal/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'principal/css/css tabla/vendor/animate/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'principal/css/css tabla/vendor/select2/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'principal/css/css tabla/vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'principal/css/css tabla/css/util.css' %}css/util.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'principal/css/css tabla/css/main.css' %}">
+{% endblock %}
+{% block clases-body %}class="main-layout"{% endblock %}
+{% block contenido %}
+    <div style="z-index: 1500" id="myModal" class="modal">
+
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
+
+        <!-- Modal Content (The Image) -->
+        <img class="modal-content" id="img01">
+
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption"></div>
+    </div>
+    <div class="layout_padding-2">
+    <div class="container">
+        <div class="row">
+            {% if request.session.cart.items|length > 0 %}
+                <div class="product-heading">
+                    <h2>Lista de compras: </h2>
+                </div>
+                <div class="limiter" style="width: 100%">
+                    <div class="container-table100">
+                        <div class="wrap-table100">
+                            <div class="table100 ver1 m-b-110">
+                                <div class="table100-head">
+                                    <table>
+                                        <thead>
+                                        <tr class="row100 head" style="text-align: center">
+                                            <th class="cell100 column1">Nombre</th>
+                                            <th class="cell100 column2">Cantidad</th>
+                                            <th class="cell100 column3">Subtotal</th>
+                                            <th class="cell100 column4">+/-</th>
+                                            <th class="cell100 column5">Eliminar</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                {% load cart_tag %}
+                                {% for key,value in request.session.cart.items %}
+                                    <div class="table100-body js-pscroll" id="item{{ key }}">
+                                        <table>
+                                            <tbody>
+                                            <tr class="row100 body" style="text-align: center">
+                                                <td class="cell100 column1">{{ value.name }}</td>
+                                                <td class="cell100 column2"><a style="cursor: pointer"><label
+                                                        id="cantidad{{ key }}"> {{ value.quantity }}</label></a></td>
+                                                <td class="cell100 column3"><a><label
+                                                        id="subtotal{{ key }}">{{ value.price|multiply:value.quantity }}</label> {{ cfg.moneda }}
+                                                </a></td>
+                                                <td class="cell100 column4"><a class="no-line-no-hover"
+                                                                               onclick="decrement({{ key }})"
+                                                                               style="font-size: 25px; cursor: pointer"><span
+                                                        class="minus bg-dark"> - </span></a> <a onclick="add({{ key }})"
+                                                                                                style="font-size: 25px; cursor: pointer"><span
+                                                        class="plus bg-dark"> + </span></a></td>
+                                                <td class="cell100 column5"><a class="no-line-no-hover"
+                                                                               style="cursor: pointer"
+                                                                               onclick="item_clear({{ key }})"><i
+                                                        class="glyphicon glyphicon-remove"> </i>Quitar pedido</a></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endfor %}
+                                <div class="table100-body js-pscroll">
+                                    <table>
+                                        <tbody>
+                                        <tr class="row100 body" style="text-align: center">
+                                            <td style="background-color: rgba(196,184,200,0.44)"
+                                                class="cell100 column3"><a style="font-weight: bolder">TOTAL: <label
+                                                    id="cart_clear">{{ total }}</label> {{ cfg.moneda }} </a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="$('#revi').click()" class="bt_main ml-4">Realizar pago</button>
+                <button onclick="window.location.replace('/cart/cart_clear/')" class="bt_main ml-3">Limpiar carrito
+                </button>
+                <div id="fila_abajo" class="row" style="margin-right: 0">
+                <div class="col-md-12">
+                    <div class="full">
+                        <div class="tab_bar_section">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item"><a class="nav-link active ml-1" data-toggle="tab"
+                                                        href="#description" id="descripcion">Detalles</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#reviews" id="revi">Realizar
+                                    pago</a></li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div id="description" class="tab-pane active">
+
+                                    <div class="product_desc">
+                                        {% for key,value in request.session.cart.items %}
+                                            <div class="media wow fadeInLeft animated productos ml-2 mb-2"
+                                                 data-wow-delay=".5s" id="item2{{ key }}">
+                                                <div class="media-left">
+                                                    <a href="{% url 'producto_detail' key %}"> <img
+                                                            style="width: 150px; height: 150px" src="{{ value.image }}"
+                                                            alt=""> </a>
+                                                </div>
+                                                <div class="code-in ">
+                                                    <p class="smith"><a href="{% url 'producto_detail' key %}"
+                                                                        class="no-line-no-hover ml-2"
+                                                                        style="cursor: pointer;font-size: 26px">{{ value.name }} </a><br><br>
+                                                    <p class="smith ml-2" style="font-size: 26px">Cantidad: <label
+                                                            id="cantidad2{{ key }}"
+                                                            style="font-size: 26px">{{ value.quantity }}</label>
+                                                        <br><br>
+                                                        <a href="{% url 'producto_detail' key %}"
+                                                           class="no-line-no-hover" style="font-size: 26px">Total <label
+                                                                id="subtotal2{{ key }}">{{ value.price|multiply:value.quantity }}</label> {{ cfg.moneda }}
+                                                        </a></p>
+                                                </div>
+                                                <div class="media-body">
+
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div id="reviews" class="tab-pane fade">
+                                    <div class="product_review">
+                                        {% if flag_paypal == False %}
+                                        <form method="post" action="{% url 'cart_detail' %}" class="main_form ml-3">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                                    {% render_field form.nombre id='inputName' oninput="checkFilledInputs()" onchange="checkFilledInputs()" class+="form-control" placeholder="Nombre del remitente" %}
+                                                </div>
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
+                                                     onclick="add_tel()">
+                                                    {% render_field form.telefono id='inputTel1' oninput="checkFilledInputs()" onchange="checkFilledInputs()" class+="form-control" placeholder="Teléfono del comprador" %}
+                                                    <h6 class="ml-2" id="texto-explicativo" style="display: none">• Si
+                                                        usted no es el remitente puede agregar un teléfono
+                                                        adicional</h6>
+                                                </div>
+                                                <button type="button" id="boton-tel2" onclick="show_input()"
+                                                        style="display: none" class="bt_main ml-4 mb-2">Agregar teléfono
+                                                    de remitente
+                                                </button>
+                                                <div id="input-tel2" class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
+                                                     style="display: none">
+                                                    {% render_field form.telefono2 id='inputTel2' class+="form-control" placeholder="Teléfono del remitente (opcional)" %}
+                                                </div>
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                                    {% render_field form.direccion id='inputDir' oninput="checkFilledInputs()" onchange="checkFilledInputs()" class+="form-control" placeholder="Dirección de entrega" %}
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div id="paypal-button-container"></div>
+                                            <script src="https://www.paypal.com/sdk/js?client-id={{ cfg.paypal }}"></script>
+                                            <script>
+                                                paypal.Buttons({
+                                                    createOrder: function (data, actions) {
+                                                        var cantidad = $("#cart_clear").html()
+                                                        // This function sets up the details of the transaction, including the amount and line item details.
+                                                        return actions.order.create({
+                                                            purchase_units: [{
+                                                                amount: {
+                                                                    value: parseInt(cantidad),
+                                                                },
+                                                            }]
+
+                                                        });
+                                                    },
+                                                    onApprove: function (data, actions) {
+                                                        // This function captures the funds from the transaction.
+                                                        return actions.order.capture().then(function (details) {
+                                                            // This function shows a transaction success message to your buyer.
+                                                            showMessage('Transacción completada con éxito por ' + details.payer.name.given_name)
+                                                            $.ajax({
+                                                                url: '/payment/',
+                                                                type: 'post',
+                                                                data: {
+                                                                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                                                                    'cantidad': $('#cart_clear').html(),
+                                                                    'parametro1': $('#inputName').val(),
+                                                                    'parametro2': $('#inputTel1').val(),
+                                                                    'parametro3': $('#inputDir').val(),
+                                                                    'parametro4': $('#inputTel2').val()
+                                                                },
+                                                                success: function (response) {
+                                                                    window.location.replace('/')
+
+                                                                },
+                                                            });
+
+                                                        });
+                                                    }
+                                                }).render('#paypal-button-container');
+                                                //This function displays Smart Payment Buttons on your web page.
+                                            </script>
+
+                                        </form>
+                                            {% else %}
+                                            <h3>No se ha detectado ningún método de pago disponible en tu localización</h3>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <h2 class="ml-2 mr-2">Su carrito esta vacío.</h2>
+                <button onclick="window.location.replace('/productos/')" class="bt_main ml-4">Ir de compras</button>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra-scripts %}
+    <script>
+        $("#paypal-button-container").hide()
+
+        function checkFilledInputs() {
+            formulario = $('#paypal-button-container');
+            if ($('#inputName').val() && $('#inputTel1').val() && $('#inputDir').val()) {
+                if (formulario.is(":hidden")) {
+                    formulario.toggle('fast');
+                }
+            } else {
+                if (formulario.is(":visible")) {
+                    formulario.toggle('fast');
+                }
+            }
+
+        }
+
+        function add_tel() {
+            $("#texto-explicativo").show('fast')
+            $("#boton-tel2").show('fast')
+        }
+
+        function show_input() {
+            if (!($('#input-tel2').is(":visible"))) {
+                $('#boton-tel2').html('Ocultar campo')
+                $("#input-tel2").show('fast')
+            } else {
+                if ($("#id_telefono2").val()) {
+                    block_screen()
+                    setTimeout(function () {
+                        unblock_screen()
+                    }, 1000);
+                    showMessage("El campo debe estar vacío")
+                } else {
+                    $('#boton-tel2').html('Agregar teléfono en Cuba')
+                    $("#input-tel2").hide('fast')
+                }
+
+            }
+        }
+
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        var texto0 = document.getElementById("link0");
+        var img0 = document.getElementById("myImg0");
+        texto0.onclick = function () {
+            modal.style.display = "block";
+            modalImg.src = img0.src;
+            captionText.innerHTML = img0.alt;
+        }
+        {% for item in producto.galeriaproducto_set.all %}
+
+            // Get the image and insert it inside the modal - use its "alt" text as a caption
+            var texto{{ forloop.counter }} = document.getElementById("link{{ forloop.counter }}");
+            var img{{ forloop.counter }} = document.getElementById("myImg{{ forloop.counter }}");
+            texto{{ forloop.counter }}.onclick = function () {
+                modal.style.display = "block";
+                modalImg.src = img{{ forloop.counter }}.src;
+                captionText.innerHTML = img{{ forloop.counter }}.alt;
+            }
+
+
+        {% endfor %}
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        function showMessage(s) {
+            var m = $("#message");
+            m.html(s);
+            m.addClass("alerta");
+            m.removeClass("is-removed");
+            m.removeClass("is-hidden");
+            m.addClass("is-visible");
+            setTimeout(function () {
+                m.removeClass("is-visible");
+                m.addClass("is-hidden");
+                setTimeout(function () {
+                    m.addClass("is-removed");
+                }, 500);
+            }, 1000);
+        }
+
+        function add(id) {
+            $.ajax({
+                url: '/cart/add/' + id + '/',
+                data: id,
+                success: function (response) {
+                    var subtotal = document.getElementById('subtotal'.concat(response['id']));
+                    var cantidad = document.getElementById('cantidad'.concat(response['id']));
+                    var total = document.getElementById('cart_'.concat('clear'));
+                    var subtotal2 = document.getElementById('subtotal2'.concat(response['id']));
+                    var cantidad2 = document.getElementById('cantidad2'.concat(response['id']));
+                    var total_cart = document.getElementById('total_ajax'.concat(''));
+                    cantidad.innerText = parseInt(cantidad.innerText) + 1;
+                    cantidad2.innerText = parseInt(cantidad2.innerText) + 1;
+                    subtotal2.innerText = parseFloat(subtotal2.innerText) + parseFloat(response['price']);
+                    subtotal.innerText = parseFloat(subtotal.innerText) + parseFloat(response['price']);
+                    total.innerText = parseFloat(total.innerText) + parseFloat(response['price']);
+                    total_cart.innerText = parseFloat(total_cart.innerText) + parseFloat(response['price']);
+                },
+            });
+        }
+
+        function decrement(id) {
+            $.ajax({
+                url: '/cart/decrement/' + id + '/',
+                data: id,
+                success: function (response) {
+                    var subtotal = document.getElementById('subtotal'.concat(response['id']));
+                    var cantidad = document.getElementById('cantidad'.concat(response['id']));
+                    var subtotal2 = document.getElementById('subtotal2'.concat(response['id']));
+                    var cantidad2 = document.getElementById('cantidad2'.concat(response['id']));
+                    var total = document.getElementById('cart_'.concat('clear'));
+                    var total_cart = document.getElementById('total_ajax'.concat(''));
+                    if (parseInt(cantidad.innerText) - 1 > 0) {
+                        cantidad.innerText = parseInt(cantidad.innerText) - 1;
+                        subtotal.innerText = parseFloat(subtotal.innerText) - parseFloat(response['price']);
+                        cantidad2.innerText = parseInt(cantidad2.innerText) - 1;
+                        subtotal2.innerText = parseFloat(subtotal2.innerText) - parseFloat(response['price']);
+                        total.innerText = parseFloat(total.innerText) - parseFloat(response['price']);
+                        total_cart.innerText = parseFloat(total_cart.innerText) - parseFloat(response['price']);
+                    }
+                },
+            });
+        }
+
+        function showSuccessmessage(s) {
+            var m = $("#message");
+            m.html(s);
+            m.addClass("notificacion");
+            m.removeClass("is-removed");
+            m.removeClass("is-hidden");
+            m.addClass("is-visible");
+            setTimeout(function () {
+                m.removeClass("is-visible");
+                m.addClass("is-hidden");
+                setTimeout(function () {
+                    m.addClass("is-removed");
+                    m.removeClass('notificacion')
+                }, 2000);
+            }, 3000);
+        }
+
+        function item_clear(id) {
+            block_screen()
+            $.ajax({
+                url: '/cart/item_clear/' + id + '/',
+                data: id,
+                success: function (response) {
+                    setTimeout(function () {
+                        unblock_screen()
+                    }, 1000);
+                    var div = $("#item".concat(response['id']));
+                    var div2 = $("#item2".concat(response['id']));
+                    div.addClass("div-no-visible");
+                    div2.addClass("div-no-visible-esp");
+                    var total = document.getElementById('cart_'.concat('clear'));
+                    var total_cart = document.getElementById('total_ajax'.concat(''));
+                    total.innerText = parseFloat(total.innerText) - (parseFloat(response['price']) * parseFloat(response['quantity']));
+                    total_cart.innerText = parseFloat(total_cart.innerText) - (parseFloat(response['price']) * parseFloat(response['quantity']));
+                    showMessage("Se eliminó ".concat(response['name']).concat(" de la cuenta"));
+                    var cart = $("#cart");
+                    if (total.innerText === '0') {
+                        window.location.replace('/carrito/')
+                    }
+                },
+            });
+        }
+    </script>
+    <script src="{% static 'principal/css/css tabla/vendor/bootstrap/js/popper.js' %}"></script>
+    <script src="{% static 'principal/css/css tabla/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'principal/css/css tabla/vendor/select2/select2.min.js' %}"></script>
+    <script src="{% static 'principal/css/css tabla/vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+    <script>
+        $('.js-pscroll').each(function () {
+            var ps = new PerfectScrollbar(this);
+
+            $(window).on('resize', function () {
+                ps.update();
+            })
+        });
+
+
+    </script>
+    <script src="{% static 'principal/css/css tabla/js/main.js' %}"></script>
+{% endblock %}
